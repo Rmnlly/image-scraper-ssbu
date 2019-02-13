@@ -11,6 +11,10 @@ const url = "https://www.smashbros.com/assets_v2/img/fighter/pict/mario.png";
 //     console.log(err);
 //   });
 
+//Essentially need to rewrite this to be a function that can be invoked whenver and
+//Then move it to a seperate modules file, import it and run it on demand based on the
+//fighters.json file
+
 const download = (uri, filename, callback) => {
   request.head(uri, (err, res, body) => {
     request(uri)
