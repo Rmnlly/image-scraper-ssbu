@@ -1,28 +1,21 @@
-const rp = require("request-promise");
-const request = require("request");
-const fs = require("fs");
-const url = "https://www.smashbros.com/assets_v2/img/fighter/pict/mario.png";
+const iconParse = require("./iconParse");
+const fightersData = require("./fighters.json");
 
-// rp(url)
-//   .then(html => {
-//     console.log(html);
-//   })
-//   .catch(err => {
-//     console.log(err);
-//   });
+const baseRequestUrl = "https://www.smashbros.com/assets_v2/img/fighter/pict/";
 
-//Essentially need to rewrite this to be a function that can be invoked whenver and
-//Then move it to a seperate modules file, import it and run it on demand based on the
-//fighters.json file
+const getName = fighter => {
+  const rawName =
+    fighter.displayNameEnSecondary === ""
+      ? fighter.displayNameEn
+      : fighter.displayNameEnSecondary;
 
-const download = (uri, filename, callback) => {
-  request.head(uri, (err, res, body) => {
-    request(uri)
-      .pipe(fs.createWriteStream(filename))
-      .on("close", callback);
-  });
+  return rawName.toLowerCase().replace(/\.| /g, "") + ".png";
 };
 
-download(url, "./images/mario.png", function() {
-  console.log("done");
-});
+fightersData.fighters.map(fighter =>
+  iconParse(
+    baseRequestUrl + fighter.file + ".png",
+    "./images/" + getName(fighter),
+    () => console.log(`Done with ${fighter.file}`)
+  )
+);
